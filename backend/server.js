@@ -14,6 +14,7 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5173',
   'https://studygenie-zcyxshrvg-dipanshutomar18-8116s-projects.vercel.app',
+  'https://studygenie-sable.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
