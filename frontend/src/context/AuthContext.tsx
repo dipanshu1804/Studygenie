@@ -15,6 +15,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   updateStreak: (streak: number) => void;
+  updateName: (name: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -57,8 +58,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((prev) => prev ? { ...prev, streak } : prev);
   };
 
+  const updateName = (name: string) => {
+    setUser((prev) => prev ? { ...prev, name } : prev);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateStreak }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateStreak, updateName }}>
       {children}
     </AuthContext.Provider>
   );

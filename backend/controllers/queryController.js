@@ -165,4 +165,14 @@ const rateQuery = async (req, res) => {
   }
 };
 
-module.exports = { askQuestion, getHistory, deleteQuery, toggleBookmark, rateQuery };
+// DELETE /api/query/all
+const deleteAllQueries = async (req, res) => {
+  try {
+    const result = await Query.deleteMany({ userId: req.user._id });
+    res.json({ message: 'All queries deleted', deleted: result.deletedCount });
+  } catch {
+    res.status(500).json({ message: 'Failed to delete queries' });
+  }
+};
+
+module.exports = { askQuestion, getHistory, deleteQuery, deleteAllQueries, toggleBookmark, rateQuery };

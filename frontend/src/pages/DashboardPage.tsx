@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import ResponseCard from '../components/ResponseCard';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
@@ -623,6 +624,7 @@ export default function DashboardPage() {
           </>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

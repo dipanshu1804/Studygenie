@@ -5,11 +5,11 @@ export default {
     extend: {
       colors: {
         dark: {
-          900: '#0a0a0f',
-          800: '#12121a',
-          700: '#1a1a26',
-          600: '#22223a',
-          500: '#2d2d4e',
+          900: 'rgb(var(--dark-900) / <alpha-value>)',
+          800: 'rgb(var(--dark-800) / <alpha-value>)',
+          700: 'rgb(var(--dark-700) / <alpha-value>)',
+          600: 'rgb(var(--dark-600) / <alpha-value>)',
+          500: 'rgb(var(--dark-500) / <alpha-value>)',
         },
         accent: {
           purple: '#7c3aed',

@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-dark-900 flex flex-col items-center justify-center px-4 text-center">
+    <div className="min-h-screen bg-dark-900 flex flex-col">
+    <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
       {/* Floating 404 */}
       <div className="float-404 text-8xl sm:text-9xl font-bold bg-gradient-to-r from-accent-purple to-accent-light bg-clip-text text-transparent mb-6 select-none leading-none">
         404
@@ -30,6 +32,8 @@ export default function NotFoundPage() {
       >
         Go back home
       </button>
+    </div>
+    <Footer />
     </div>
   );
 }

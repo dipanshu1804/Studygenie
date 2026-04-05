@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyGenie – AI Doubt Solver</title>
     <meta name="description" content="AI-powered academic doubt solving platform for students" />
+    <!-- Apply theme before first paint to avoid flash -->
+    <script>
+      (function () {
+        var t = localStorage.getItem('sg_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
