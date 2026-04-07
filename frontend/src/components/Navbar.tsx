@@ -66,8 +66,8 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group" onClick={() => setMenuOpen(false)}>
-            <div className="logo-pulse w-8 h-8 rounded-lg bg-gradient-to-br from-accent-purple to-accent-light flex items-center justify-center text-white font-bold text-sm shadow-md shadow-accent-purple/30 group-hover:shadow-accent-purple/50 group-hover:rotate-6 transition-all duration-300">
-              SG
+            <div className="w-8 h-8 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-200">
+              <img src="/favicon.svg" alt="StudyGenie Logo" className="w-full h-full" />
             </div>
             <span className="font-bold text-lg text-white group-hover:text-accent-light transition-colors">
               StudyGenie

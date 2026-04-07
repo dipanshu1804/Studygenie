@@ -53,12 +53,12 @@ export default function AuthModal({ mode, onClose, onSwitchMode }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-y-auto">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative bg-dark-800 border border-dark-600 rounded-2xl p-8 w-full max-w-md shadow-2xl">
+      <div className="relative w-full max-w-md bg-dark-800 border border-dark-600 rounded-2xl p-8 shadow-2xl my-auto">
         {/* Close */}
         <button
           onClick={onClose}
