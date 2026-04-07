@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Logo brand variables ─────────────────────────────────────── */
+:root {
+  --logo-primary:   #5fa07d;
+  --logo-secondary: #7fb69a;
+  --logo-dark:      #0a0a0f;
+}
+
+/* ── Input field utility ──────────────────────────────────────── */
+.input-field {
+  width: 100%;
+  background: #1a1a26;
+  border: 1px solid #2d2d4e;
+  border-radius: 0.75rem;
+  padding: 0.625rem 1rem;
+  color: #e2e8f0;
+  font-size: 0.875rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.input-field::placeholder { color: #475569; }
+.input-field:focus {
+  border-color: #5fa07d;
+  box-shadow: 0 0 0 3px rgba(95, 160, 125, 0.15);
+}
+.input-field:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* ── CSS variables: dark theme (default) ──────────────────────── */
 :root {
   --dark-900: 10 10 15;

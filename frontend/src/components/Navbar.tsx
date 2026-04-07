@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import AuthModal from './AuthModal';
 import ShortcutsModal from './ShortcutsModal';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout }      = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate();
+  const navigate   = useNavigate();
+  const location   = useLocation();
 
   const [showAuth,      setShowAuth]      = useState(false);
   const [authMode,      setAuthMode]      = useState<'login' | 'register'>('login');
@@ -44,16 +45,37 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', h);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
   const handleLogout = () => {
     logout();
     navigate('/');
     setMenuOpen(false);
     setAvatarOpen(false);
   };
+
   const openLogin    = () => { setAuthMode('login');    setShowAuth(true); setMenuOpen(false); };
   const openRegister = () => { setAuthMode('register'); setShowAuth(true); setMenuOpen(false); };
 
   const avatar = user ? user.name.charAt(0).toUpperCase() : '';
+
+  const isActive = (path: string) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
+
+  const navLink = (path: string) =>
+    `relative px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+      isActive(path)
+        ? 'text-white bg-dark-700'
+        : 'text-slate-400 hover:text-white hover:bg-dark-700'
+    }`;
+
+  const mobileNavLink = (path: string) =>
+    `px-4 py-2.5 rounded-lg text-sm transition-colors ${
+      isActive(path)
+        ? 'bg-dark-600 text-white font-medium'
+        : 'bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600'
+    }`;
 
   return (
     <>
@@ -65,25 +87,26 @@ export default function Navbar() {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group" onClick={() => setMenuOpen(false)}>
+          <Link to="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-200">
               <img src="/favicon.svg" alt="StudyGenie Logo" className="w-full h-full" />
             </div>
-            <span className="font-bold text-lg text-white group-hover:text-accent-light transition-colors">
+            <span className="font-bold text-lg text-white group-hover:text-sage-400 transition-colors">
               StudyGenie
             </span>
           </Link>
 
-          {/* ── Desktop ─────────────────────────────────────── */}
-          <div className="hidden sm:flex items-center gap-2">
-            {/* Quiz */}
-            <Link
-              to="/quiz"
-              className="nav-link px-3 py-1.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-dark-600 transition-colors"
-            >
-              🧠 Quiz
-            </Link>
+          {/* ── Desktop nav ─────────────────────────────────────── */}
+          <div className="hidden sm:flex items-center gap-1">
+            <Link to="/"         className={navLink('/')}>Home</Link>
+            <Link to="/quiz"     className={navLink('/quiz')}>🧠 Quiz</Link>
+            {user && (
+              <Link to="/dashboard" className={navLink('/dashboard')}>Dashboard</Link>
+            )}
+          </div>
 
+          {/* ── Desktop right controls ───────────────────────────── */}
+          <div className="hidden sm:flex items-center gap-2">
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
@@ -121,7 +144,7 @@ export default function Navbar() {
                     aria-expanded={avatarOpen}
                     className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl hover:bg-dark-600 transition-colors group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-purple to-accent-light flex items-center justify-center text-white font-bold text-sm shrink-0 group-hover:shadow-md group-hover:shadow-accent-purple/30 transition-shadow">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sage-500 to-sage-400 flex items-center justify-center text-white font-bold text-sm shrink-0 group-hover:shadow-md group-hover:shadow-sage-500/30 transition-shadow">
                       {avatar}
                     </div>
                     <span className="text-slate-300 text-sm font-medium max-w-[80px] truncate">
@@ -168,14 +191,14 @@ export default function Navbar() {
               <>
                 <button
                   onClick={openLogin}
-                  className="nav-link px-4 py-1.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-dark-600 transition-colors"
+                  className="px-4 py-1.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-dark-600 transition-colors"
                 >
-                  Login
+                  Sign In
                 </button>
                 <button
                   data-ripple
                   onClick={openRegister}
-                  className="px-4 py-1.5 rounded-lg text-sm bg-accent-purple hover:bg-accent-violet text-white transition-colors shadow-md shadow-accent-purple/20"
+                  className="px-4 py-1.5 rounded-lg text-sm bg-sage-500 hover:bg-sage-600 text-white transition-colors shadow-md shadow-sage-500/20"
                 >
                   Sign Up
                 </button>
@@ -207,13 +230,14 @@ export default function Navbar() {
         {/* ── Mobile Menu ──────────────────────────────────────── */}
         {menuOpen && (
           <div className="sm:hidden border-t border-dark-600 bg-dark-900/95 backdrop-blur-md px-4 py-3 flex flex-col gap-2 animate-fade-in-down">
-            <Link to="/quiz" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 rounded-lg text-sm bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600 transition-colors text-center">
-              🧠 Quiz
-            </Link>
+            <Link to="/"     className={mobileNavLink('/')}>🏠 Home</Link>
+            <Link to="/quiz" className={mobileNavLink('/quiz')}>🧠 Quiz</Link>
+
             {user ? (
               <>
-                <div className="flex items-center gap-3 px-3 py-2 bg-dark-800 rounded-xl border border-dark-600">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-purple to-accent-light flex items-center justify-center text-white font-bold text-sm shrink-0">
+                <Link to="/dashboard" className={mobileNavLink('/dashboard')}>📋 Dashboard</Link>
+                <div className="flex items-center gap-3 px-3 py-2 bg-dark-800 rounded-xl border border-dark-600 mt-1">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sage-500 to-sage-400 flex items-center justify-center text-white font-bold text-sm shrink-0">
                     {avatar}
                   </div>
                   <div className="min-w-0">
@@ -223,15 +247,16 @@ export default function Navbar() {
                     )}
                   </div>
                 </div>
-                <Link to="/profile"   onClick={() => setMenuOpen(false)} className="px-4 py-2.5 rounded-lg text-sm bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600 transition-colors">👤 My Profile</Link>
-                <Link to="/settings"  onClick={() => setMenuOpen(false)} className="px-4 py-2.5 rounded-lg text-sm bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600 transition-colors">⚙ Settings</Link>
-                <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 rounded-lg text-sm bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600 transition-colors">📋 My History</Link>
-                <button onClick={handleLogout} className="px-4 py-2.5 rounded-lg text-sm text-red-400 hover:bg-red-900/20 border border-dark-600 transition-colors">↩ Sign Out</button>
+                <Link to="/profile"  className={mobileNavLink('/profile')}>👤 My Profile</Link>
+                <Link to="/settings" className={mobileNavLink('/settings')}>⚙ Settings</Link>
+                <button onClick={handleLogout} className="px-4 py-2.5 rounded-lg text-sm text-red-400 hover:bg-red-900/20 border border-dark-600 transition-colors text-left">
+                  ↩ Sign Out
+                </button>
               </>
             ) : (
               <>
-                <button onClick={openLogin}    className="px-4 py-2.5 rounded-lg text-sm bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600 transition-colors">Login</button>
-                <button onClick={openRegister} className="px-4 py-2.5 rounded-lg text-sm bg-accent-purple hover:bg-accent-violet text-white transition-colors">Sign Up Free</button>
+                <button onClick={openLogin}    className="px-4 py-2.5 rounded-lg text-sm bg-dark-700 text-slate-300 hover:text-white hover:bg-dark-600 transition-colors">Sign In</button>
+                <button onClick={openRegister} className="px-4 py-2.5 rounded-lg text-sm bg-sage-500 hover:bg-sage-600 text-white transition-colors">Sign Up Free</button>
               </>
             )}
           </div>
@@ -242,7 +267,7 @@ export default function Navbar() {
         <AuthModal
           mode={authMode}
           onClose={() => setShowAuth(false)}
-          onSwitchMode={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
+          onSwitchMode={(m) => setAuthMode(m)}
         />
       )}
       {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
