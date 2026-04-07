@@ -7,7 +7,7 @@ import ShortcutsModal from './ShortcutsModal';
 
 export default function Navbar() {
   const { user, logout }      = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const navigate   = useNavigate();
   const location   = useLocation();
 
@@ -110,11 +110,17 @@ export default function Navbar() {
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-              className="text-slate-500 hover:text-slate-300 transition-colors text-base px-1.5 py-1 rounded"
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              className="relative flex items-center gap-1 px-3 py-2 rounded-xl border border-ink-600 hover:border-sage-500/40 transition-all duration-300 bg-ink-800 hover:bg-ink-700 group"
             >
-              {theme === 'dark' ? '☀️' : '🌙'}
+              <div className={`relative w-10 h-5 rounded-full transition-colors duration-300 ${isDark ? 'bg-ink-600' : 'bg-sage-500'}`}>
+                <div className={`absolute top-0.5 w-4 h-4 rounded-full shadow-sm transition-all duration-300 flex items-center justify-center text-xs ${isDark ? 'left-0.5 bg-slate-400' : 'left-5 bg-white'}`}>
+                  {isDark ? '🌙' : '☀️'}
+                </div>
+              </div>
+              <span className="text-xs text-slate-400 group-hover:text-slate-300 hidden sm:block">
+                {isDark ? 'Dark' : 'Light'}
+              </span>
             </button>
 
             {/* Keyboard shortcuts */}
@@ -208,8 +214,8 @@ export default function Navbar() {
 
           {/* ── Mobile: theme + shortcuts + hamburger ────────── */}
           <div className="flex sm:hidden items-center gap-2">
-            <button onClick={toggleTheme} className="text-slate-500 hover:text-slate-300 transition-colors text-base px-1">
-              {theme === 'dark' ? '☀️' : '🌙'}
+            <button onClick={toggleTheme} className="text-slate-500 hover:text-slate-300 transition-colors text-base px-1" title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+              {isDark ? '☀️' : '🌙'}
             </button>
             <button onClick={() => setShowShortcuts(true)} className="text-slate-500 hover:text-slate-300 transition-colors text-base px-1">
               ⌨

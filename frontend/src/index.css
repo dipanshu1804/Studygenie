@@ -99,6 +99,37 @@ body {
 [data-theme="light"] .text-green-400  { color: #16a34a; }
 [data-theme="light"] .text-yellow-400 { color: #ca8a04; }
 
+/* ── Light mode: ink-* class overrides ───────────────────────── */
+.light body {
+  background-color: #f0f4f8;
+  color: #1a1a2e;
+}
+.light .bg-ink-800 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+.light .bg-ink-900,
+.light .bg-ink-950 {
+  background-color: #f0f4f8 !important;
+}
+.light .bg-ink-700 {
+  background-color: #e8edf2 !important;
+}
+.light .text-gray-300,
+.light .text-gray-400 { color: #4a5568 !important; }
+.light .text-gray-500 { color: #718096 !important; }
+.light .text-white    { color: #1a1a2e !important; }
+.light .border-ink-600,
+.light .border-ink-700 { border-color: #e2e8f0 !important; }
+.light input,
+.light textarea {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #1a1a2e !important;
+}
+.light input::placeholder,
+.light textarea::placeholder { color: #a0aec0 !important; }
+
 /* ── Markdown styling inside ResponseCard ─────────────────────── */
 .prose-dark h1, .prose-dark h2, .prose-dark h3 {
   color: #a78bfa; margin-top: 1rem; margin-bottom: 0.5rem;
