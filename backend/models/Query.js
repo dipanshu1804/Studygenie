@@ -45,4 +45,7 @@ const querySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+querySchema.index({ userId: 1, createdAt: -1 })
+querySchema.index({ subject: 1 })
+
 module.exports = mongoose.model('Query', querySchema);

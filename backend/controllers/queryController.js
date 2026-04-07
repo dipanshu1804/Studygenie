@@ -22,6 +22,11 @@ const askQuestion = async (req, res) => {
     return res.status(400).json({ message: 'Subject is required' });
   }
 
+  const sanitizedQuestion = question.trim().slice(0, 500);
+  if (sanitizedQuestion.length < 3) {
+    return res.status(400).json({ message: 'Question is too short' });
+  }
+
   // Build system prompt — prepend conversation context for follow-up questions
   const systemPrompt = context
     ? `${SYSTEM_PROMPT}\n\n--- Conversation so far ---\n${context.trim()}\n--- End of context ---\nNow answer the following follow-up question in relation to the above context:`
@@ -33,7 +38,7 @@ const askQuestion = async (req, res) => {
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Subject: ${subject}\n\nQuestion: ${question.trim()}` },
+        { role: 'user', content: `Subject: ${subject}\n\nQuestion: ${sanitizedQuestion}` },
       ],
       temperature: 0.7,
       max_tokens: 1500,
@@ -56,7 +61,7 @@ const askQuestion = async (req, res) => {
     try {
       savedQuery = await Query.create({
         userId: req.user._id,
-        question: question.trim(),
+        question: sanitizedQuestion,
         subject,
         response: aiResponse,
       });

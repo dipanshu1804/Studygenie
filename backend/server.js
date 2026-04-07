@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const rateLimit = require('express-rate-limit')
 require('dotenv').config()
 
 const authRoutes  = require('./routes/authRoutes')
@@ -8,6 +9,32 @@ const queryRoutes = require('./routes/queryRoutes')
 const quizRoutes  = require('./routes/quizRoutes')
 
 const app = express()
+
+// ── Rate limiting ────────────────────────────────────────────────
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: 'Too many requests, please try again later.' }
+})
+
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: { message: 'Too many AI requests, please wait a moment.' }
+})
+
+app.use('/api/', limiter)
+app.use('/api/query/ask', aiLimiter)
+
+// ── Request logging ──────────────────────────────────────────────
+app.use((req, res, next) => {
+  const start = Date.now()
+  res.on('finish', () => {
+    const duration = Date.now() - start
+    console.log(`${req.method} ${req.path} ${res.statusCode} ${duration}ms`)
+  })
+  next()
+})
 
 app.use(express.json())
 app.use(cors({

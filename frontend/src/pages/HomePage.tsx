@@ -340,8 +340,12 @@ export default function HomePage() {
     if (error) setError(null);
   };
 
+  const isSubmitting = useRef(false);
+
   const submitQuestion = async () => {
+    if (isSubmitting.current) return;
     if (!question.trim()) { setError('Please enter your question'); return; }
+    isSubmitting.current = true;
     setLoading(true); setError(null); setResult(null); clearDraft();
     try {
       const res = await api.post('/query/ask', { question: question.trim(), subject });
@@ -353,6 +357,7 @@ export default function HomePage() {
       setError(msg);
     } finally {
       setLoading(false);
+      isSubmitting.current = false;
     }
   };
 
