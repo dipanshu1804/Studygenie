@@ -28,6 +28,61 @@
 }
 .input-field:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ── Component utilities ──────────────────────────────────────── */
+.card {
+  background: rgb(var(--dark-800));
+  border: 1px solid rgb(var(--dark-600));
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: #5fa07d;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  background: #4a8a6a;
+  box-shadow: 0 4px 16px rgba(95,160,125,0.25);
+}
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(var(--dark-600));
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: #ffffff; border-color: #5fa07d; }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-width: 1px;
+  border-style: solid;
+}
+
 /* ── CSS variables: dark theme (default) ──────────────────────── */
 :root {
   --dark-900: 10 10 15;

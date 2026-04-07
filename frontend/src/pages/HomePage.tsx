@@ -229,13 +229,12 @@ export default function HomePage() {
     return () => { obsHiw.disconnect(); obsShow.disconnect(); obsTest.disconnect(); };
   }, []);
 
-  // ── Prefill from SubjectPage navigation ─────────────────────────
+  // ── Prefill from SubjectPage navigation (legacy prefill key) ────
   useEffect(() => {
     const prefill = (location.state as { prefill?: { question: string; subject: string } } | null)?.prefill;
     if (!prefill) return;
     if (prefill.subject) setSubject(prefill.subject);
     if (prefill.question) setQuestion(prefill.question);
-    // Clear state so refresh doesn't re-apply
     window.history.replaceState({}, '');
     if (prefill.question) {
       setTimeout(() => {
@@ -244,6 +243,21 @@ export default function HomePage() {
       }, 300);
     }
   }, []);
+
+  // ── Prefill from SubjectPage navigation (direct state format) ───
+  useEffect(() => {
+    const state = location.state as { question?: string; subject?: string } | null;
+    if (!state) return;
+    if (state.subject) setSubject(state.subject);
+    if (state.question) setQuestion(state.question);
+    window.history.replaceState({}, '');
+    if (state.question) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        textareaRef.current?.focus();
+      }, 300);
+    }
+  }, [location.state]);
 
   // ── Draft: load on mount ─────────────────────────────────────────
   useEffect(() => {
@@ -498,18 +512,16 @@ export default function HomePage() {
                   >
                     {s.emoji} {s.label}
                   </button>
-                  {/* Info icon — visible on hover */}
+                  {/* Info icon — navigates to subject page on hover */}
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setSubjectModalId(s.value); }}
-                    title={`About ${s.label}`}
-                    className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover/sub:opacity-100 transition-opacity focus:opacity-100 ${
-                      subject === s.value
-                        ? 'bg-white/20 text-white hover:bg-white/30'
-                        : 'bg-dark-500 text-slate-400 hover:bg-accent-purple/60 hover:text-white'
-                    }`}
+                    onClick={(e) => { e.stopPropagation(); navigate(`/subject/${s.value}`); }}
+                    title={`Learn about ${s.label}`}
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-300 transition-colors opacity-0 group-hover/sub:opacity-100"
                   >
-                    ℹ
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                   </button>
                 </div>
               ))}
