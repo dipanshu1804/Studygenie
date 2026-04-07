@@ -10,32 +10,27 @@ const quizRoutes  = require('./routes/quizRoutes');
 
 const app = express();
 
-// ── CORS must come before everything else ────────────────────────
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://studygenie-sable.vercel.app',
-  'https://studygenie-vwa1.onrender.com',
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+// Handle OPTIONS preflight before anything else
+app.options('*', cors());
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.some((allowed) =>
-      origin === allowed || origin.endsWith('.vercel.app')
-    )) {
-      callback(null, true);
+app.use(cors({
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:5173',
+      'https://studygenie-sable.vercel.app',
+      process.env.FRONTEND_URL
+    ].filter(Boolean)
+    if (!origin || allowed.includes(origin) ||
+        (origin && origin.endsWith('.vercel.app'))) {
+      callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('CORS blocked: ' + origin))
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
-// Handle OPTIONS preflight requests for all routes
-app.options('*', cors(corsOptions));
-app.use(cors(corsOptions));
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}))
 
 app.use(express.json());
 
