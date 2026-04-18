@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '/api',
-  headers: { 'Content-Type': 'application/json' },
+  baseURL: import.meta.env.PROD
+    ? import.meta.env.VITE_API_URL || 'https://studygenie-backend.onrender.com/api'
+    : '/api',
 })
 
-// Attach token from localStorage on every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('sg_token')
   if (token) {

@@ -10,8 +10,23 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://studygenie.vercel.app',
+      process.env.FRONTEND_URL
+    ].filter(Boolean)
+    if (!origin || allowed.includes(origin) ||
+        (origin && origin.endsWith('.vercel.app'))) {
+      callback(null, true)
+    } else {
+      callback(new Error('CORS blocked: ' + origin))
+    }
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
 }));
 
 // Routes
