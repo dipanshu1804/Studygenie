@@ -1,12 +1,7 @@
 import axios from 'axios'
 
-const isProd = typeof window !== 'undefined' &&
-  !window.location.hostname.includes('localhost')
-
 const api = axios.create({
-  baseURL: isProd
-    ? 'https://studygenie-n9av.onrender.com/api'
-    : '/api',
+  baseURL: 'https://studygenie-n9av.onrender.com/api',
 })
 
 api.interceptors.request.use((config) => {
