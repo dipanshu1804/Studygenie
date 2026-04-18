@@ -38,8 +38,24 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
-  credentials: true
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://studygenie-bc829te20-dipanshutomar18-8116s-projects.vercel.app',
+      'https://studygenie.vercel.app',
+      process.env.FRONTEND_URL
+    ].filter(Boolean)
+    if (!origin || allowed.includes(origin) ||
+        (origin && origin.endsWith('.vercel.app'))) {
+      callback(null, true)
+    } else {
+      callback(new Error('CORS blocked: ' + origin))
+    }
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
 }))
 
 app.use('/api/auth',  authRoutes)
